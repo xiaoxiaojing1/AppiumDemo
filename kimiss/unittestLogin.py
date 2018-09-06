@@ -11,18 +11,25 @@ from ddt import ddt, data, unpack  # ddt包需要手动加载安装
 
 @ddt  # 测试类前加修饰，说明本测试类使用数据驱动框架
 class MyTestCase(unittest.TestCase):
+
     def setUp(self):
 
         desired_caps = {}
         desired_caps['platformName'] = 'Android'
-        desired_caps['platformVersion'] = '8.0'
-        desired_caps['deviceName'] = 'A'
+        desired_caps['platformVersion'] = '6.0'
+        desired_caps['deviceName'] = 'Android Emulator'  # 随便输入，没有实际作用，但必须有该参数
+        desired_caps['uiid'] = ''  # 当电脑连接多个设备时需要指定该参数
+
         desired_caps['appPackage'] = 'com.kimiss.gmmz.android'
         desired_caps['appActivity'] = '.ui.ActivityStart'
-        desired_caps["unicodeKeyboard"] = "True"
-        desired_caps["resetKeyboard"] = "True"
-        self.driver = webdriver.Remote("http://localhost:4723/wd/hub",
-                                       desired_caps)
+
+        # 输入法
+        desired_caps['unicodeKeyboard'] = 'True'  # 支持中文输入
+        desired_caps['resetKeyboard'] = 'True'    # 运行结束后，删除appium键盘
+
+        desired_caps['noReset'] = 'true'  # 不做应用清除
+
+        self.driver = webdriver.Remote("http://localhost:4723/wd/hub", desired_caps)
 
     # 当测试用例有多个参数时，使用元组存放被测数据
     @data(("jmetr", "123456", True),
